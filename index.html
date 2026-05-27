@@ -3,23 +3,310 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World</title>
+    <title>QUADRATO | Премиальные квадратные пиццы в Альбукерке</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
+        :root {
+            --bg: #0a0a0c;
+            --surface: #141418;
+            --text: #e6e6e6;
+            --text-muted: #888;
+            --gold: #d4af37;
+            --gold-dark: #9a7b1f;
+            --border: #2a2a2f;
+            --radius: 8px;
+            --shadow: 0 8px 24px rgba(0,0,0,0.6);
         }
-        h1 {
-            color: #333;
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 { font-family: 'Playfair Display', serif; color: var(--gold); }
+        a { color: inherit; text-decoration: none; transition: 0.3s; }
+        button { cursor: pointer; font-family: inherit; }
+
+        /* Header */
+        header {
+            position: fixed; top: 0; left: 0; right: 0;
+            background: rgba(10,10,12,0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo { font-size: 1.5rem; font-weight: 700; letter-spacing: 2px; color: var(--gold); }
+        nav { display: flex; gap: 2rem; align-items: center; }
+        nav a:hover { color: var(--gold); }
+        .cart-btn {
+            background: var(--gold-dark);
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+        }
+        .cart-btn:hover { background: var(--gold); color: #000; }
+
+        /* Hero */
+        #hero {
+            min-height: 100vh;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            text-align: center;
+            padding: 2rem;
+            background: radial-gradient(circle at 50% 30%, #1a1508 0%, var(--bg) 70%);
+        }
+        #hero h1 { font-size: clamp(2.5rem, 6vw, 4.5rem); margin-bottom: 1rem; }
+        #hero p { max-width: 600px; color: var(--text-muted); font-size: 1.1rem; margin-bottom: 2rem; }
+        .cta {
+            background: var(--gold); color: #000;
+            padding: 1rem 2.5rem; font-size: 1.1rem; font-weight: 600;
+            border: none; border-radius: var(--radius);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .cta:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(212,175,55,0.3); }
+
+        /* Menu */
+        #menu { padding: 6rem 2rem; max-width: 1200px; margin: 0 auto; }
+        #menu h2 { text-align: center; margin-bottom: 3rem; font-size: 2.5rem; }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2rem;
+            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .card:hover { border-color: var(--gold); transform: translateY(-4px); }
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+        }
+        .price { font-size: 1.8rem; font-weight: 700; color: var(--gold); margin: 0.5rem 0; }
+        .ingredients { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem; }
+        .add-btn {
+            width: 100%; background: transparent; border: 1px solid var(--gold);
+            color: var(--gold); padding: 0.8rem; border-radius: var(--radius);
+            font-weight: 600; transition: 0.3s;
+        }
+        .add-btn:hover { background: var(--gold); color: #000; }
+
+        /* About */
+        #about {
+            background: var(--surface);
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+        #about .content { max-width: 800px; margin: 0 auto; }
+        #about h2 { margin-bottom: 1.5rem; font-size: 2.2rem; }
+        #about p { margin-bottom: 1rem; color: var(--text-muted); }
+
+        /* Cart Section */
+        #cart { padding: 4rem 2rem; max-width: 800px; margin: 0 auto; }
+        #cart h2 { text-align: center; margin-bottom: 2rem; }
+        .cart-list { background: var(--surface); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem; }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 0; border-bottom: 1px solid var(--border); }
+        .cart-item:last-child { border-bottom: none; }
+        .qty-controls button { background: var(--border); color: #fff; border: none; padding: 0.3rem 0.6rem; margin: 0 0.3rem; border-radius: 4px; }
+        .total { text-align: right; font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem; color: var(--gold); }
+        .checkout-btn { width: 100%; background: var(--gold); color: #000; padding: 1rem; font-weight: 700; border: none; border-radius: var(--radius); }
+        .checkout-btn:disabled { background: var(--border); color: var(--text-muted); cursor: not-allowed; }
+        .empty-msg { text-align: center; color: var(--text-muted); padding: 2rem; }
+
+        /* Footer */
+        footer { background: #050506; padding: 3rem 2rem; text-align: center; color: var(--text-muted); border-top: 1px solid var(--border); }
+        footer p { margin: 0.5rem 0; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav { gap: 1rem; }
+            #menu, #cart { padding: 4rem 1.5rem; }
         }
     </style>
 </head>
 <body>
-    <h1>Hello World!</h1>
+
+<header>
+    <div class="logo">QUADRATO</div>
+    <nav>
+        <a href="#menu">Меню</a>
+        <a href="#about">О нас</a>
+        <button class="cart-btn" onclick="scrollToCart()">Корзина <span id="cart-count">(0)</span></button>
+    </nav>
+</header>
+
+<main>
+    <section id="hero">
+        <h1>Искусство в каждом углу</h1>
+        <p>Премиальные квадратные пиццы, созданные исключительно для успешных людей Альбукерке. Наши цены отражают ценность вашего времени, статуса и безупречного вкуса.</p>
+        <button class="cta" onclick="document.getElementById('menu').scrollIntoView()">Выбрать свою пиццу</button>
+    </section>
+
+    <section id="menu">
+        <h2>Коллекция QUADRATO</h2>
+        <div class="grid" id="menu-grid">
+            <!-- Cards injected by JS -->
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="content">
+            <h2>Почему квадрат? Почему так дорого?</h2>
+            <p>Квадратная форма — символ точности, контроля и архитектурной гармонии. Мы не гонимся за массовым рынком. Каждая пицца выпекается вручную в печи из итальянского мрамора, использует ингредиенты, доставленные авиапочкой, и упаковывается в бархатные термобоксы.</p>
+            <p>Наши клиенты — предприниматели, топ-менеджеры и ценители эксклюзива. Мы доставляем заказы по Альбукерке на бронированных автомобилях с личным сомелье, который подбирает вино под ваш квадрат.</p>
+            <p><strong>Мы не для всех. Мы для тех, кто выбирает лучшее.</strong></p>
+        </div>
+    </section>
+
+    <section id="cart">
+        <h2>Ваш заказ</h2>
+        <div class="cart-list" id="cart-list">
+            <div class="empty-msg">Корзина пуста. Добавьте первую пиццу из коллекции.</div>
+        </div>
+        <div class="total" id="cart-total">Итого: $0</div>
+        <button class="checkout-btn" id="checkout-btn" disabled onclick="checkout()">Оформить VIP-доставку</button>
+    </section>
+</main>
+
+<footer>
+    <p>📍 4500 Central Ave NW, Albuquerque, NM 87102</p>
+    <p>📞 +1 (505) 999-0001 | ✉️ concierge@quadrato.pizza</p>
+    <p style="margin-top: 1rem;">© 2026 QUADRATO PIZZA. Только для успешных людей.</p>
+</footer>
+
+<script>
+    // Data
+    const pizzas = [
+        {
+            id: 1,
+            name: "Золотой Квадрат Альбукерке",
+            price: 159,
+            desc: "Трюфельное масло первого отжима, мраморная говядина Вагю A5, страчателла, съедобное золото 24 карата."
+        },
+        {
+            id: 2,
+            name: "Пустынный Премиум",
+            price: 189,
+            desc: "Копченый лосось из Аляски, черная икра осетра, сливочный крем из кешью, нити шафрана, микрозелень."
+        },
+        {
+            id: 3,
+            name: "Геометрия Вкуса",
+            price: 139,
+            desc: "Утиная грудка су-вид, карамелизированный лук на бурбоне, выдержанный пармезан 24 мес., бальзамик из Модены."
+        },
+        {
+            id: 4,
+            name: "Элитный Квадрат",
+            price: 169,
+            desc: "Микс лесных грибов шиитаке и белого трюфеля, тесто на белом вине, бурратта, оливковое масло экстра-вирджин."
+        }
+    ];
+
+    let cart = [];
+
+    // Render Menu
+    const menuGrid = document.getElementById('menu-grid');
+    pizzas.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+            <h3>${p.name}</h3>
+            <div class="price">$${p.price}</div>
+            <div class="ingredients">${p.desc}</div>
+            <button class="add-btn" onclick="addToCart(${p.id})">Добавить в заказ</button>
+        `;
+        menuGrid.appendChild(card);
+    });
+
+    // Cart Logic
+    function addToCart(id) {
+        const item = pizzas.find(p => p.id === id);
+        const existing = cart.find(c => c.id === id);
+        if (existing) {
+            existing.qty++;
+        } else {
+            cart.push({ ...item, qty: 1 });
+        }
+        updateCartUI();
+    }
+
+    function changeQty(id, delta) {
+        const item = cart.find(c => c.id === id);
+        if (!item) return;
+        item.qty += delta;
+        if (item.qty <= 0) cart = cart.filter(c => c.id !== id);
+        updateCartUI();
+    }
+
+    function updateCartUI() {
+        const list = document.getElementById('cart-list');
+        const totalEl = document.getElementById('cart-total');
+        const countEl = document.getElementById('cart-count');
+        const btn = document.getElementById('checkout-btn');
+
+        countEl.textContent = `(${cart.reduce((sum, i) => sum + i.qty, 0)})`;
+
+        if (cart.length === 0) {
+            list.innerHTML = '<div class="empty-msg">Корзина пуста. Добавьте первую пиццу из коллекции.</div>';
+            totalEl.textContent = 'Итого: $0';
+            btn.disabled = true;
+            return;
+        }
+
+        btn.disabled = false;
+        let html = '';
+        let total = 0;
+
+        cart.forEach(item => {
+            const subtotal = item.price * item.qty;
+            total += subtotal;
+            html += `
+                <div class="cart-item">
+                    <div>
+                        <strong>${item.name}</strong><br>
+                        <span style="color:var(--text-muted); font-size:0.9rem;">$${item.price} × ${item.qty}</span>
+                    </div>
+                    <div class="qty-controls">
+                        <button onclick="changeQty(${item.id}, -1)">−</button>
+                        <span>${item.qty}</span>
+                        <button onclick="changeQty(${item.id}, 1)">+</button>
+                    </div>
+                    <div style="font-weight:600; min-width: 80px; text-align:right;">$${subtotal}</div>
+                </div>
+            `;
+        });
+
+        list.innerHTML = html;
+        totalEl.textContent = `Итого: $${total}`;
+    }
+
+    function scrollToCart() {
+        document.getElementById('cart').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function checkout() {
+        if (cart.length === 0) return;
+        const total = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+        alert(`✅ VIP-заказ оформлен!\nСумма: $${total}\n\nНаш консьерж свяжется с вами в течение 5 минут для подтверждения адреса в Альбукерке и выбора времени доставки на бронированном автомобиле.`);
+        cart = [];
+        updateCartUI();
+    }
+</script>
+
 </body>
 </html>
